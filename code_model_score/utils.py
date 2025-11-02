@@ -12,44 +12,55 @@ import torch
 model_cache = {}
 
 
-def load_model(model, root_path="./model"):
-    if model in model_cache:
-        print(f"Loading {model} from cache.")
-        return model_cache[model]
+# def load_model(model, root_path="./model"):
+#     if model in model_cache:
+#         print(f"Loading {model} from cache.")
+#         return model_cache[model]
 
-    if model.startswith("CodeLlama"):
-        model_path = f"{root_path}/codellama/{model}-hf"
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        terminators = tokenizer.eos_token_id
-        pipeline = transformers.pipeline(
-            "text-generation",
-            model=model_path,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            return_full_text=False,
-        )
-    elif model.startswith("Meta-Llama-3"):
-        model_path = f"{root_path}/llama3/{model}-hf"
-        pipeline = transformers.pipeline(
-            "text-generation",
-            model=model_path,
-            model_kwargs={"torch_dtype": torch.bfloat16},
-            device_map="auto",
-            return_full_text=False,
-        )
-        terminators = [
-            pipeline.tokenizer.eos_token_id,
-            pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>"),
-        ]
-    elif model.startswith("gpt"):
-        terminators = None
-        pipeline = None
-    else:
-        raise ("Invalid model name")
+#     if model.startswith("CodeLlama"):
+#         model_path = f"{root_path}/codellama/{model}-hf"
+#         tokenizer = AutoTokenizer.from_pretrained(model_path)
+#         terminators = tokenizer.eos_token_id
+#         pipeline = transformers.pipeline(
+#             "text-generation",
+#             model=model_path,
+#             torch_dtype=torch.float16,
+#             device_map="auto",
+#             return_full_text=False,
+#         )
+#     elif model.startswith("Meta-Llama-3"):
+#         model_path = f"{root_path}/llama3/{model}-hf"
+#         pipeline = transformers.pipeline(
+#             "text-generation",
+#             model=model_path,
+#             model_kwargs={"torch_dtype": torch.bfloat16},
+#             device_map="auto",
+#             return_full_text=False,
+#         )
+#         terminators = [
+#             pipeline.tokenizer.eos_token_id,
+#             pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>"),
+#         ]
+#     elif model.startswith("gpt"):
+#         terminators = None
+#         pipeline = None
+#     else:
+#         raise ("Invalid model name")
 
+#     model_cache[model] = (terminators, pipeline)
+#     return terminators, pipeline
+
+def load_model(model):
+    pipeline = transformers.pipeline(
+        "text-generation",
+        model=model,
+        model_kwargs={"torch_dtype": torch.bfloat16},
+        device_map="auto",
+        return_full_text=False,
+    )
+    terminators = pipeline.tokenizer.eos_token_id
     model_cache[model] = (terminators, pipeline)
     return terminators, pipeline
-
 
 # This function adopted from https://github.com/terryyz/ice-score/blob/main/llm_code_eval/evaluator.py#L24-L59
 def process_raw_content(content, aspect):
