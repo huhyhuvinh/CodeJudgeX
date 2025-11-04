@@ -57,6 +57,7 @@ def load_model(model):
         model_kwargs={"torch_dtype": torch.bfloat16},
         device_map="auto",
         return_full_text=False,
+        token=os.environ['HF_TOKEN']
     )
     terminators = pipeline.tokenizer.eos_token_id
     model_cache[model] = (terminators, pipeline)
