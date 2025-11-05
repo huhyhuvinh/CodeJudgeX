@@ -1,3 +1,4 @@
+source ../venv/bin/activate
 python ./bigcodebench/code_score.py \
 --test_case codellama--CodeLlama-13b-Instruct-hf \
 --model meta-llama/Meta-Llama-3-8B-Instruct \

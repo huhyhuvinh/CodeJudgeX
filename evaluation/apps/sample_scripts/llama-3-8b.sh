@@ -1,3 +1,4 @@
+source ../venv/bin/activate
 python ./apps/code_score.py \
 --test_case gpt \
 --model meta-llama/Meta-Llama-3-8B-Instruct \

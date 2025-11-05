@@ -1,3 +1,4 @@
+source ../venv/bin/activate
 python ./humaneval/code_score.py \
 --test_case python-small-test \
 --model meta-llama/Meta-Llama-3-8B-Instruct \

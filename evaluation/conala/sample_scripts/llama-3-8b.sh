@@ -1,3 +1,4 @@
+source ../venv/bin/activate
 python ./conala/code_score.py \
 --model meta-llama/Meta-Llama-3-8B-Instruct \
 --step 1 \
