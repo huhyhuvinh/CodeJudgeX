@@ -66,7 +66,6 @@ def load_model(checkpoint):
         torch_dtype=torch.bfloat16,
         quantization_config=bnb_config,
         device_map='auto',
-        return_full_text=False,
         token=os.environ['HF_TOKEN']
     )
 
