@@ -5,7 +5,6 @@ import re
 import time
 import os
 from collections import Counter
-from transformers import AutoTokenizer
 import transformers
 import torch
 
@@ -50,10 +49,10 @@ model_cache = {}
 #     model_cache[model] = (terminators, pipeline)
 #     return terminators, pipeline
 
-def load_model(model):
-    if model in model_cache:
-        print(f"Loading {model} from cache.")
-        return model_cache[model]
+def load_model(checkpoint):
+    if checkpoint in model_cache:
+        print(f"Loading {checkpoint} from cache.")
+        return model_cache[checkpoint]
     
     bnb_config = transformers.BitsAndBytesConfig(
         load_in_8bit=True,
@@ -61,25 +60,19 @@ def load_model(model):
         llm_int8_skip_modules=None,
     )
 
-    pipeline = transformers.pipeline(
-        "text-generation",
-        model=model,
-        model_kwargs={"torch_dtype": torch.bfloat16},
-        device_map="auto",
+    tokenizer = transformers.AutoTokenizer.from_pretrained(checkpoint)
+    model = transformers.AutoModelForCausalLM.from_pretrained(
+        'text-generation',
+        model=checkpoint,
+        torch_dtype=torch.bfloat16,
         quantization_config=bnb_config,
+        device_map='auto',
         return_full_text=False,
         token=os.environ['HF_TOKEN']
     )
-    if model.startswith("meta-llama/Meta-Llama-3"):
-        terminators = [
-            pipeline.tokenizer.eos_token_id,
-            pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>"),
-        ]
-    elif model.startswith("codellama/CodeLlama"):
-        terminators = pipeline.tokenizer.eos_token_id
 
-    model_cache[model] = (terminators, pipeline)
-    return terminators, pipeline
+    model_cache[checkpoint] = (tokenizer, model)
+    return tokenizer, model
 
 # This function adopted from https://github.com/terryyz/ice-score/blob/main/llm_code_eval/evaluator.py#L24-L59
 def process_raw_content(content, aspect):

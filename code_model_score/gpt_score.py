@@ -58,10 +58,10 @@ def llama3_prompt(message):
 
 
 def form_filling(
-    model,
+    checkpoint,
     prompt,
-    terminators,
-    pipeline,
+    tokenizer,
+    model,
     temperature,
     info=None,
     max_tokens=2000,
@@ -75,33 +75,36 @@ def form_filling(
                 if place_holder in item["content"]:
                     item["content"] = item["content"].replace(place_holder, text).strip()
 
-    if model.startswith("gpt-4") or model.startswith("gpt-3.5-turbo"):
+    if checkpoint.startswith("gpt-4") or checkpoint.startswith("gpt-3.5-turbo"):
         return openai_request(
-            message=message, model=model, temperature=temperature, max_tokens=max_tokens
+            message=message, model=checkpoint, temperature=temperature, max_tokens=max_tokens
         )
-    elif model.startswith("codellama/CodeLlama"):
-        prompt = code_llama_prompt(message)
-        return pipeline(
-            prompt,
-            do_sample=True,
-            temperature=temperature,
-            top_p=0.9,
-            num_return_sequences=1,
-            eos_token_id=terminators,
-            max_new_tokens=max_tokens,
-            pad_token_id=pipeline.tokenizer.eos_token_id,
-        )[0]["generated_text"].strip()
-    elif model.startswith("meta-llama/Meta-Llama-3"):
-        prompt = llama3_prompt(message)
-        return pipeline(
-            prompt,
-            do_sample=True,
-            temperature=temperature,
-            top_p=0.9,
-            num_return_sequences=1,
-            eos_token_id=terminators,
-            max_new_tokens=max_tokens,
-            pad_token_id=pipeline.tokenizer.eos_token_id,
-        )[0]["generated_text"].strip()
+    elif checkpoint.startswith("codellama/CodeLlama"):
+        terminators = tokenizer.eos_token_id
+
+    elif checkpoint.startswith("meta-llama/Meta-Llama-3"):
+        terminators = [
+            tokenizer.eos_token_id,
+            tokenizer.convert_tokens_to_ids("<|eot_id|>")
+        ]
+    
     else:
         raise Exception("Invalid model")
+    
+    input_ids = tokenizer.apply_chat_templates(
+        message,
+        add_generation_prompt=True,
+        return_tensors="pt"
+    ).to(model.device)
+    
+    outputs = model.generate(
+        input_ids,
+        do_sample=True,
+        temperature=temperature,
+        top_p=0.9,
+        num_return_sequences=1,
+        eos_token_id=terminators,
+        max_new_tokens=max_tokens,
+        pad_token_id=tokenizer.eos_token_id,
+    )
+    return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
