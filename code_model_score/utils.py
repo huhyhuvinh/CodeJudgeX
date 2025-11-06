@@ -5,7 +5,8 @@ import re
 import time
 import os
 from collections import Counter
-from transformers import AutoTokenizer, pipeline, BitsAndBytesConfig
+from transformers import AutoTokenizer
+import transformers
 import torch
 
 model_cache = {}
@@ -54,13 +55,13 @@ def load_model(model):
         print(f"Loading {model} from cache.")
         return model_cache[model]
     
-    bnb_config = BitsAndBytesConfig(
+    bnb_config = transformers.BitsAndBytesConfig(
         load_in_8bit=True,
         llm_int8_threshold=6.0,
         llm_int8_skip_modules=None,
     )
 
-    pipeline = pipeline(
+    pipeline = transformers.pipeline(
         "text-generation",
         model=model,
         model_kwargs={"torch_dtype": torch.bfloat16},
