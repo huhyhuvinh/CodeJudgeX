@@ -62,7 +62,6 @@ def load_model(checkpoint):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(checkpoint)
     model = transformers.AutoModelForCausalLM.from_pretrained(
-        'text-generation',
         model=checkpoint,
         torch_dtype=torch.bfloat16,
         quantization_config=bnb_config,
