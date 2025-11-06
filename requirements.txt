@@ -10,6 +10,7 @@ appdirs>=1.4.4
 asttokens
 async-timeout>=4.0.3
 attrs>=23.2.0
+bitsandbytes
 blobfile>=2.1.1
 certifi>=2024.07.04
 cffi>=1.16.0
