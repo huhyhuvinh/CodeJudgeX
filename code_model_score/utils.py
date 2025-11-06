@@ -5,8 +5,7 @@ import re
 import time
 import os
 from collections import Counter
-from transformers import AutoTokenizer
-import transformers
+from transformers import AutoTokenizer, pipeline, BitsAndBytesConfig
 import torch
 
 model_cache = {}
@@ -51,15 +50,33 @@ model_cache = {}
 #     return terminators, pipeline
 
 def load_model(model):
-    pipeline = transformers.pipeline(
+    if model in model_cache:
+        print(f"Loading {model} from cache.")
+        return model_cache[model]
+    
+    bnb_config = BitsAndBytesConfig(
+        load_in_8bit=True,
+        llm_int8_threshold=6.0,
+        llm_int8_skip_modules=None,
+    )
+
+    pipeline = pipeline(
         "text-generation",
         model=model,
         model_kwargs={"torch_dtype": torch.bfloat16},
         device_map="auto",
+        quantization_config=bnb_config,
         return_full_text=False,
         token=os.environ['HF_TOKEN']
     )
-    terminators = pipeline.tokenizer.eos_token_id
+    if model.startswith("meta-llama/Meta-Llama-3"):
+        terminators = [
+            pipeline.tokenizer.eos_token_id,
+            pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>"),
+        ]
+    elif model.startswith("codellama/CodeLlama"):
+        terminators = pipeline.tokenizer.eos_token_id
+
     model_cache[model] = (terminators, pipeline)
     return terminators, pipeline
 

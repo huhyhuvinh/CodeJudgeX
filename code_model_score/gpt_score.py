@@ -79,7 +79,7 @@ def form_filling(
         return openai_request(
             message=message, model=model, temperature=temperature, max_tokens=max_tokens
         )
-    elif model.startswith("CodeLlama"):
+    elif model.startswith("codellama/CodeLlama"):
         prompt = code_llama_prompt(message)
         return pipeline(
             prompt,
@@ -91,7 +91,7 @@ def form_filling(
             max_new_tokens=max_tokens,
             pad_token_id=pipeline.tokenizer.eos_token_id,
         )[0]["generated_text"].strip()
-    elif model.startswith("Meta-Llama-3"):
+    elif model.startswith("meta-llama/Meta-Llama-3"):
         prompt = llama3_prompt(message)
         return pipeline(
             prompt,
