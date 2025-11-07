@@ -91,7 +91,7 @@ def form_filling(
     else:
         raise Exception("Invalid model")
     
-    input_ids = tokenizer.apply_chat_templates(
+    input_ids = tokenizer.apply_chat_template(
         message,
         add_generation_prompt=True,
         return_tensors="pt"
