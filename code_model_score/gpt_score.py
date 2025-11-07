@@ -108,4 +108,5 @@ def form_filling(
         max_new_tokens=max_tokens,
         pad_token_id=tokenizer.eos_token_id,
     )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+    response = outputs[0][input_ids.shape[-1]:]
+    return tokenizer.decode(response, skip_special_tokens=True).strip()
