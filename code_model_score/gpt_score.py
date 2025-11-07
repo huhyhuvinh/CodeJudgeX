@@ -91,14 +91,19 @@ def form_filling(
     else:
         raise Exception("Invalid model")
     
-    input_ids = tokenizer.apply_chat_template(
+    inputs = tokenizer.apply_chat_template(
         message,
         add_generation_prompt=True,
-        return_tensors="pt"
+        return_tensors="pt",
+        return_attention_mask=True
     ).to(model.device)
     
+    input_ids = inputs['input_ids']
+    attention_mask = inputs['attention_mask']
+
     outputs = model.generate(
         input_ids,
+        attention_mask=attention_mask,
         do_sample=True,
         temperature=temperature,
         top_p=0.9,
