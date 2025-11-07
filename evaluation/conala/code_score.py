@@ -200,7 +200,7 @@ def router(
         if step == 1:
             compare_prompt = single_step_prompt[compare_prompt_index]
             file_name = (
-                f"{model}-1-{compare_prompt_index}-{temperature}-sample-{index}.json"
+                f"{model.split('/')[1]}-1-{compare_prompt_index}-{temperature}-sample-{index}.json"
             )
             print(file_name)
             single_step_workflow(
@@ -214,7 +214,7 @@ def router(
             analyze_prompt = dual_step_prompt["analyze_prompt"][analyze_prompt_index]
             compare_prompt = dual_step_prompt["compare_prompt"][compare_prompt_index]
 
-            file_name = f"{model}-2-{analyze_prompt_index}-{compare_prompt_index}-{temperature}-sample-{index}.json"
+            file_name = f"{model.split('/')[1]}-2-{analyze_prompt_index}-{compare_prompt_index}-{temperature}-sample-{index}.json"
             print(file_name)
             dual_step_workflow(
                 model,

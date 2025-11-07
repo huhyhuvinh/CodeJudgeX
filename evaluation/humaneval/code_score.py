@@ -237,7 +237,7 @@ def router(
     file_name=None,
 ):
     for index in range(num_samples):
-        full_file_name = f"{file_name}-sample-{index}.json"
+        full_file_name = f"{file_name.split('/')[1]}-sample-{index}.json"
         if step == 1:
             print(full_file_name)
             single_step_workflow(
