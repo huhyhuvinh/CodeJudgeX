@@ -1,3 +1,4 @@
+source ../venv/bin/activate
 python ./apps/code_score.py \
 --test_case gpt \
 --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B \
