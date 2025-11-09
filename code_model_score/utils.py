@@ -53,18 +53,11 @@ def load_model(checkpoint):
     if checkpoint in model_cache:
         print(f"Loading {checkpoint} from cache.")
         return model_cache[checkpoint]
-    
-    bnb_config = transformers.BitsAndBytesConfig(
-        load_in_8bit=True,
-        llm_int8_threshold=6.0,
-        llm_int8_skip_modules=None,
-    )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(checkpoint)
     model = transformers.AutoModelForCausalLM.from_pretrained(
         checkpoint,
         torch_dtype=torch.bfloat16,
-        quantization_config=bnb_config,
         device_map='auto',
         token=os.environ['HF_TOKEN']
     )
