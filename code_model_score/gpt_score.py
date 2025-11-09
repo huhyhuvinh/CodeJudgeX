@@ -79,7 +79,7 @@ def form_filling(
         return openai_request(
             message=message, model=checkpoint, temperature=temperature, max_tokens=max_tokens
         )
-    elif checkpoint.startswith("codellama/CodeLlama") or checkpoint.startswith("deepseek-ai/deepseek-coder"):
+    elif checkpoint.startswith("codellama/CodeLlama") or checkpoint.startswith("deepseek-ai/deepseek-coder") or checkpoint.startswith("deepseek-ai/DeepSeek-R1-Distill-Qwen"):
         terminators = tokenizer.eos_token_id
 
     elif checkpoint.startswith("meta-llama/Meta-Llama-3"):
