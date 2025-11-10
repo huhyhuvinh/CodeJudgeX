@@ -100,7 +100,7 @@ def form_filling(
     
 
     outputs = model.generate(
-        inputs,
+        **inputs,
         do_sample=True,
         temperature=temperature,
         top_p=0.9,
