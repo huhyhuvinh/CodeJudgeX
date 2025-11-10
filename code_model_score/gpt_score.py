@@ -81,7 +81,7 @@ def form_filling(
                 message=message, model=checkpoint, temperature=temperature, max_tokens=max_tokens
             )
         return pipeline(
-            prompt,
+            message,
             do_sample=True,
             temperature=temperature,
             top_p=0.9,
