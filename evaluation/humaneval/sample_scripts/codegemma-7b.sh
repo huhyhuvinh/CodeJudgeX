@@ -2,7 +2,7 @@ source ../venv/bin/activate
 
 python ./humaneval/code_score.py \
 --test_case python-small-test \
---model google/codegemma-7b-it \
+--model google/codegemma-7b \
 --step 2 \
 --compare_prompt 0 \
 --analyze_prompt 0 \
@@ -13,7 +13,7 @@ python ./humaneval/code_score.py \
 
 python ./humaneval/code_score.py \
 --test_case python-small-test \
---model google/codegemma-7b-it \
+--model google/codegemma-7b \
 --step 2 \
 --compare_prompt 1 \
 --analyze_prompt 0 \
