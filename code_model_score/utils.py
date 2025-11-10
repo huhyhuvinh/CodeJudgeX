@@ -54,16 +54,23 @@ def load_model(checkpoint):
         print(f"Loading {checkpoint} from cache.")
         return model_cache[checkpoint]
 
-    tokenizer = transformers.AutoTokenizer.from_pretrained(checkpoint)
-    model = transformers.AutoModelForCausalLM.from_pretrained(
-        checkpoint,
-        torch_dtype=torch.bfloat16,
+    pipeline = transformers.pipeline(
+        'text-generation',
+        model=checkpoint,
+        dtype=torch.bfloat16,
         device_map='auto',
+        return_full_text=False,
         token=os.environ['HF_TOKEN']
     )
+    if checkpoint.startswith("meta-llama/Meta-Llama-3"):
+        terminators = [
+            pipeline.tokenizer.eos_token_id,
+            pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>"),
+        ]
+    else: terminators = pipeline.tokenizer.eos_token_id
 
-    model_cache[checkpoint] = (tokenizer, model)
-    return tokenizer, model
+    model_cache[checkpoint] = (terminators, pipeline)
+    return terminators, pipeline
 
 # This function adopted from https://github.com/terryyz/ice-score/blob/main/llm_code_eval/evaluator.py#L24-L59
 def process_raw_content(content, aspect):

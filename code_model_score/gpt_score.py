@@ -60,8 +60,8 @@ def llama3_prompt(message):
 def form_filling(
     checkpoint,
     prompt,
-    tokenizer,
-    model,
+    terminators,
+    pipeline,
     temperature,
     info=None,
     max_tokens=2000,
@@ -74,40 +74,21 @@ def form_filling(
                 place_holder = "{{" + place_holder + "}}"
                 if place_holder in item["content"]:
                     item["content"] = item["content"].replace(place_holder, text).strip()
-
-    if checkpoint.startswith("gpt-4") or checkpoint.startswith("gpt-3.5-turbo"):
-        return openai_request(
-            message=message, model=checkpoint, temperature=temperature, max_tokens=max_tokens
-        )
-    elif checkpoint.startswith("codellama/CodeLlama") or checkpoint.startswith("deepseek-ai") or checkpoint.startswith("Qwen/Qwen2.5-Coder") or checkpoint.startswith("google/codegemma"):
-        terminators = tokenizer.eos_token_id
-
-    elif checkpoint.startswith("meta-llama/Meta-Llama-3"):
-        terminators = [
-            tokenizer.eos_token_id,
-            tokenizer.convert_tokens_to_ids("<|eot_id|>")
-        ]
     
-    else:
+    try:
+        if checkpoint.startswith("gpt-4") or checkpoint.startswith("gpt-3.5-turbo"):
+            return openai_request(
+                message=message, model=checkpoint, temperature=temperature, max_tokens=max_tokens
+            )
+        return pipeline(
+            prompt,
+            do_sample=True,
+            temperature=temperature,
+            top_p=0.9,
+            num_return_sequences=1,
+            eos_token_id=terminators,
+            max_new_tokens=max_tokens,
+            pad_token_id=pipeline.tokenizer.eos_token_id,
+        )[0]["generated_text"].strip()
+    except:
         raise Exception("Invalid model")
-    
-    inputs = tokenizer.apply_chat_template(
-        message,
-        add_generation_prompt=True,
-        return_tensors="pt",
-        return_dict=True
-    ).to(model.device)
-    
-
-    outputs = model.generate(
-        **inputs,
-        do_sample=True,
-        temperature=temperature,
-        top_p=0.9,
-        num_return_sequences=1,
-        eos_token_id=terminators,
-        max_new_tokens=max_tokens,
-        pad_token_id=tokenizer.eos_token_id,
-    )
-    response = outputs[0][inputs['input_ids'].shape[-1]:]
-    return tokenizer.decode(response, skip_special_tokens=True).strip()
