@@ -1,23 +1,23 @@
-source ../venv/bin/activate
-python ./bigcodebench/code_score.py \
---test_case codellama--CodeLlama-13b-Instruct-hf \
---model Qwen/Qwen2.5-Coder-3B-Instruct \
---step 2 \
---compare_prompt 1 \
---analyze_prompt 0 \
---temperature 0.4 \
---return_type bool \
---num_samples 3
+# source ../venv/bin/activate
+# python ./bigcodebench/code_score.py \
+# --test_case codellama--CodeLlama-13b-Instruct-hf \
+# --model Qwen/Qwen2.5-Coder-3B-Instruct \
+# --step 2 \
+# --compare_prompt 1 \
+# --analyze_prompt 0 \
+# --temperature 0.4 \
+# --return_type bool \
+# --num_samples 3
 
-python ./bigcodebench/code_score.py \
---test_case codellama--CodeLlama-13b-Instruct-hf \
---model Qwen/Qwen2.5-Coder-3B-Instruct \
---step 2 \
---compare_prompt 0 \
---analyze_prompt 0 \
---temperature 0.4 \
---return_type bool \
---num_samples 3
+# python ./bigcodebench/code_score.py \
+# --test_case codellama--CodeLlama-13b-Instruct-hf \
+# --model Qwen/Qwen2.5-Coder-3B-Instruct \
+# --step 2 \
+# --compare_prompt 0 \
+# --analyze_prompt 0 \
+# --temperature 0.4 \
+# --return_type bool \
+# --num_samples 3
 
 python ./bigcodebench/code_score.py \
 --test_case codellama--CodeLlama-13b-Instruct-hf \
