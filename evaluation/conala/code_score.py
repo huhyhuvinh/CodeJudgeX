@@ -99,7 +99,7 @@ def single_step_workflow(
             )
 
             output_item["code_gpt_score"][case] = {
-                "code_gpt_score": float(answer_to_score(code_gpt_answer, return_type)),
+                "code_gpt_score": float(answer_to_score(code_gpt_answer, return_type, bool_flag=False)),
                 "comparison": code_gpt_answer,
             }
 
@@ -172,7 +172,7 @@ def dual_step_workflow(
                 },
                 max_tokens=10,
             )
-            code_gpt_score = answer_to_score(code_gpt_answer, return_type)
+            code_gpt_score = answer_to_score(code_gpt_answer, return_type, bool_flag=False)
 
             output_item["code_gpt_score"][case] = {
                 "code_gpt_score": float(code_gpt_score),

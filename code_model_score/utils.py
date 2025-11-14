@@ -118,7 +118,7 @@ def process_raw_content(content, aspect):
     return int(ans[0])
 
 
-def answer_to_score(answer, return_type):
+def answer_to_score(answer, return_type, bool_flag=True):
     lines = answer.split("\n")
     if return_type == "bool":
         last_line = lines[-1].strip()
@@ -278,8 +278,9 @@ def answer_to_score(answer, return_type):
             except Exception:
                 print(f"Invalid answer: {answer}")
                 return -1
-        return 1.0 if score == 100 else 0.0
-        # return max(score, 0) / 100
+        if bool_flag:
+            return 1.0 if score == 100 else 0.0
+        return max(score, 0) / 100
     elif return_type == "0_to_4_score_functional_correctness":
         return process_raw_content(answer, "functional correctness")
     elif return_type == "0_to_4_score_usefulness":
