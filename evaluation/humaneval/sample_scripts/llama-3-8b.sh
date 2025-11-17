@@ -1,13 +1,13 @@
 source ../venv/bin/activate
-python ./humaneval/code_score.py \
---test_case python-small-test \
---model meta-llama/Meta-Llama-3-8B-Instruct \
---step 1 \
---compare_prompt 4 \
---temperature 0.4 \
---with_prefix \
---return_type "inconsistency_level" \
---num_samples 3
+# python ./humaneval/code_score.py \
+# --test_case python-small-test \
+# --model meta-llama/Meta-Llama-3-8B-Instruct \
+# --step 1 \
+# --compare_prompt 4 \
+# --temperature 0.4 \
+# --with_prefix \
+# --return_type "inconsistency_level" \
+# --num_samples 3
 
 python ./humaneval/code_score.py \
 --test_case python-small-test \
