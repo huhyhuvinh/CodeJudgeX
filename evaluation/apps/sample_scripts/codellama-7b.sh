@@ -18,20 +18,20 @@ python ./apps/code_score.py \
 --return_type bool \
 --num_samples 3
 
-python ./apps/code_score.py \
---test_case gpt \
---model meta-llama/CodeLlama-7b-Instruct-hf \
---step 1 \
---compare_prompt 4 \
---temperature 0.4 \
---return_type "inconsistency_level" \
---num_samples 3
+# python ./apps/code_score.py \
+# --test_case gpt \
+# --model meta-llama/CodeLlama-7b-Instruct-hf \
+# --step 1 \
+# --compare_prompt 4 \
+# --temperature 0.4 \
+# --return_type "inconsistency_level" \
+# --num_samples 3
 
-python ./apps/code_score.py \
---test_case gpt \
---model meta-llama/CodeLlama-7b-Instruct-hf \
---step 1 \
---compare_prompt 5 \
---temperature 0.4 \
---return_type "inconsistency_level" \
---num_samples 3
+# python ./apps/code_score.py \
+# --test_case gpt \
+# --model meta-llama/CodeLlama-7b-Instruct-hf \
+# --step 1 \
+# --compare_prompt 5 \
+# --temperature 0.4 \
+# --return_type "inconsistency_level" \
+# --num_samples 3
