@@ -1,11 +1,11 @@
 source ../venv/bin/activate
-python ./conala/code_score.py \
---model meta-llama/Meta-Llama-3-8B-Instruct \
---step 1 \
---compare_prompt 4 \
---temperature 0.4 \
---return_type "inconsistency_level" \
---num_samples 3
+# python ./conala/code_score.py \
+# --model meta-llama/Meta-Llama-3-8B-Instruct \
+# --step 1 \
+# --compare_prompt 4 \
+# --temperature 0.4 \
+# --return_type "inconsistency_level" \
+# --num_samples 3
 
 python ./conala/code_score.py \
 --model meta-llama/Meta-Llama-3-8B-Instruct \
@@ -13,7 +13,7 @@ python ./conala/code_score.py \
 --compare_prompt 5 \
 --temperature 0.4 \
 --return_type "inconsistency_level" \
---num_samples 3
+--num_samples 1
 
 # python ./conala/code_score.py \
 # --model meta-llama/Meta-Llama-3-8B-Instruct \
